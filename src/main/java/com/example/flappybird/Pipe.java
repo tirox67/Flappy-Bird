@@ -9,14 +9,15 @@ public class Pipe {
     private double y;
     private double width;
     private double height;
-   ;
+    private boolean top;
 
     //constructor
-    public Pipe(double x, double y, double width, double height) {
+    public Pipe(double x, double y, double width, double height,boolean top) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.top = top;
 
 
 
@@ -38,6 +39,9 @@ public class Pipe {
 
     public static Stack<Pipe> getPipes()
     {return Pipes;}
+
+    public boolean isTop()
+    {return this.top;}
 
     public void setX(double x){
         this.x = x;
