@@ -11,6 +11,7 @@ module com.example.flappybird {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.management;
+    requires javafx.media;
 
     opens com.example.flappybird to javafx.fxml;
     exports com.example.flappybird;

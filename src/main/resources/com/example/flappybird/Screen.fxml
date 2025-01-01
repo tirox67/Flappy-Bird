@@ -11,14 +11,14 @@
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.flappybird.Controller">
    <children>
-      <ImageView fx:id="Background_Flappy_Bird" fitHeight="1000.0" fitWidth="973.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="Background_Dunk_Mode" fitHeight="1027.0" fitWidth="696.0" layoutX="-8.0" layoutY="-15.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../../../IMGS/b2b084ad6061dfe2122302266ea8af58.jpg" />
+            <Image url="@../../../IMGS/Background_Dunk.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="Background_Dunk_Mode" fitHeight="1039.0" fitWidth="691.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="Background_Flappy_Bird" fitHeight="1000.0" fitWidth="973.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../../OneDrive/Bilder/Background_Dunk_Mode.jpg" />
+            <Image url="@../../../IMGS/Background_Flappy_Mode.jpg" />
          </image>
       </ImageView>
       <ImageView fx:id="Bird" fitHeight="57.0" fitWidth="89.0" layoutX="292.0" layoutY="241.0" pickOnBounds="true" preserveRatio="true">
@@ -57,7 +57,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="Close_Game_Button" layoutX="233.0" layoutY="690.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="EXIT" textFill="WHITE">
+      <Button fx:id="Close_Game_Button" layoutX="233.0" layoutY="690.0" mnemonicParsing="false" onAction="#Exit" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="EXIT" textFill="WHITE">
          <font>
             <Font name="System Italic" size="24.0" />
          </font>

@@ -40,6 +40,9 @@ public class Pipe {
     public static Stack<Pipe> getPipes()
     {return Pipes;}
 
+    public static void clearPipes()
+    {Pipes.clear();}
+
     public boolean isTop()
     {return this.top;}
 

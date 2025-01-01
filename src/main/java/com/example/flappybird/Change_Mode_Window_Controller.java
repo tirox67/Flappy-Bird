@@ -1,15 +1,19 @@
 package com.example.flappybird;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Change_Mode_Window_Controller {
 
+    ImageView bird = Controller.getBird();
+    ImageView Background_Flappy_Mode = Controller.getBackground_Flappy_Mode();
+    ImageView Ball = Controller.getBall();
+    ImageView Background_Dunk_Mode = Controller.getBackground_Dunk_Mode();
+    Label Title_Label = Controller.getTitle_Label();
     @FXML
     private Button Button_close;
 
@@ -57,14 +61,24 @@ public class Change_Mode_Window_Controller {
     @FXML
     private void on_Dunk_icon_clicked(){
         Controller.setMode_flag(false);
-        System.out.println(Controller.getMode_flag());
+        bird.setVisible(false);
+        Background_Flappy_Mode.setVisible(false);
+        Ball.setVisible(true);
+        Background_Dunk_Mode.setVisible(true);
+        Title_Label.setText("Flappy Dunk");
+        Title_Label.setStyle("-fx-text-fill: red;");
 
     }//end of on_Dunk_icon_clicked
 
     @FXML
     private void on_Flappy_icon_clicked(){
         Controller.setMode_flag(true);
-        System.out.println(Controller.getMode_flag());
+        bird.setVisible(true);
+        Background_Flappy_Mode.setVisible(true);
+        Ball.setVisible(false);
+        Background_Dunk_Mode.setVisible(false);
+        Title_Label.setText("Flappy Bird");
+        Title_Label.setStyle("-fx-text-fill: Green;");
     }//end of on_Flappy_icon_clicked
 
 

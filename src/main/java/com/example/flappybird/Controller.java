@@ -11,11 +11,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
@@ -26,6 +26,8 @@ public class Controller implements Initializable {
 
     static javafx.scene.Node[] Start_screen_container = new javafx.scene.Node[4];
 
+    public static Controller instance;
+
     @FXML
     private Button Start_Button;
     @FXML
@@ -33,7 +35,7 @@ public class Controller implements Initializable {
     @FXML
     private Label Title_Label;
     @FXML
-    private ImageView Bird;
+    public ImageView Bird;
     @FXML
     private ImageView Ball;
     @FXML
@@ -82,9 +84,20 @@ public class Controller implements Initializable {
     int counter =0;
     int Points =0;
 
+    MediaPlayer FlappyMediaPlayer;
+    private void Play_Music(){
+
+       String Flappysong = getClass().getResource("/SOUNDS/FlappyBanger.mp3").toExternalForm();
+       Media FlappyMedia = new Media(Flappysong);
+       FlappyMediaPlayer = new MediaPlayer(FlappyMedia);
+       FlappyMediaPlayer.play();
+       FlappyMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+    }//end of Play_Music
+
 
 
     private void Start_Flappy_mode(){
+        Play_Music();
         gameloop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -114,13 +127,9 @@ public class Controller implements Initializable {
                         Pipe.getPipes().removeFirst();
                         Pipe.getPipes().removeFirst();
                     }
-                    System.out.println(Pipe.getPipes().size());
                     lastPipeSpawnTime = now; // Reset timer
 
                 }
-
-
-
 
 
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -139,10 +148,19 @@ public class Controller implements Initializable {
                     for(Pipe pipe : Pipe.getPipes()) {
                         boolean collision;
                         if(pipe.isTop()) {
-                            collision = birdBounds.intersects(pipe.getX(), pipe.getY(), pipe.getWidth() - 15, pipe.getHeight() - 15);
-                        }else{ collision = birdBounds.intersects(pipe.getX(), pipe.getY()+15, pipe.getWidth() - 15, pipe.getHeight());}
-                        if(birdBounds.getMaxX() >= pipe.getX()){Points+=1; Points_Label.setText(String.valueOf(Points));}
-                        if (collision) {gameloop.stop(); Lost();}
+                            collision = birdBounds.intersects(pipe.getX()+20, pipe.getY(), pipe.getWidth() - 20, pipe.getHeight() - 20);
+                        }else{
+                            collision = birdBounds.intersects(pipe.getX()+20, pipe.getY()+20, pipe.getWidth() - 20, pipe.getHeight());
+                        }
+                        if(birdBounds.getMaxX() >= pipe.getX() && birdBounds.getMaxX()< pipe.getX()+4){
+                            Points+=1;
+                            Points_Label.setText(String.valueOf(Points));
+                        }
+                        if (collision) {
+                            gameloop.stop();
+                            Lost();
+                        }
+
                     }
                 }
 
@@ -194,19 +212,22 @@ public class Controller implements Initializable {
         gameloop.start();
 
     }//end of Start_Dunk_mode
+
     @FXML
     private void Main(){
         System.out.println(mode_flag);
         if(!mode_flag) {
             Ball.setVisible(true);
+            Background_Dunk_Mode.setVisible(true);
             Bird.setVisible(false);
             Background_Flappy_Bird.setVisible(false);
-            Background_Dunk_Mode.setVisible(true);
+
         }else{
             Bird.setVisible(true);
             Ball.setVisible(false);
             Background_Flappy_Bird.setVisible(true);
             Background_Dunk_Mode.setVisible(false);
+
             Start_Flappy_mode();
         }
     }//end of Main
@@ -214,19 +235,31 @@ public class Controller implements Initializable {
     //reset game and go back to start screen
     @FXML
     private void Lost(){
-        Bird.setRotate(0);
-        Bird.setY(0);
-        Bird.setX(0);
+
+        //delete the obstacles and reset the player
+        if(mode_flag) {
+            Bird.setRotate(0);
+            Bird.setY(0);
+            Bird.setX(0);
+            Pipe.clearPipes();
+            FlappyMediaPlayer.stop();
+        }else {
+            Ball.setRotate(0);
+            Ball.setY(0);
+            Ball.setX(0);
+        }
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        //stop the game and show the titlescreen
         Game = false;
         gameloop.stop();
         for(javafx.scene.Node i : Start_screen_container){i.setVisible(true);}
 
-        //remove the pipes from the screen
-        for(int i =0; i< Pipe.getPipes().size();i++){
-            Pipe.getPipes().removeFirst();
-        }
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        //reset the points and the Points_Label
+        Points = 0;
+        Points_Label.setText("Points: 0");
         Points_Label.setVisible(false);
+
     }//end of Lost
 
     private static Stage stage_Change_Mode;
@@ -252,6 +285,8 @@ public class Controller implements Initializable {
             stage_Change_Mode.initStyle(StageStyle.TRANSPARENT);
             stage_Change_Mode.show();
 
+
+
         } catch (IOException e) {
             // If an error occurs while loading the FXML, print the error message
             e.printStackTrace();
@@ -259,14 +294,20 @@ public class Controller implements Initializable {
         }//end of try-catch
     }//end of Change-Mode
 
+    //logic to leave the game
+    @FXML
+    private void Exit(){
+        System.exit(0);
+    }//end of Exit
 
     //just the init method
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        instance = this;
 
         gc = canvas.getGraphicsContext2D();
-        Background_Dunk_Mode.setVisible(true);
+
 
         //add the objects in the Start_screen_container to change the visibility easier
         Start_screen_container[0] = Start_Button;
@@ -274,12 +315,34 @@ public class Controller implements Initializable {
         Start_screen_container[2] = Change_Mode_Button;
         Start_screen_container[3] = Close_Game_Button;
 
+
         //move the Bird on Mouseclick
-       canvas.setOnMouseClicked(event -> {
-           if(Game) {
-               Bird.setY(Bird.getY() - 100);
-               Bird.setRotate(-30);
+        canvas.setOnMouseClicked(event -> {
+            if(Game) {
+                Bird.setY(Bird.getY() - 100);
+                Bird.setRotate(-30);
+
            }
        });
-    }
-}
+    }//end of init
+
+    public static ImageView getBird() {
+        return instance.Bird; // Access  via the instance
+    }//end of getBird
+    public static ImageView getBackground_Flappy_Mode() {
+        return instance.Background_Flappy_Bird; // Access via the instance
+    }//end of getBackground_Flappy_Mode
+    public static ImageView getBall() {
+        return instance.Ball; // Access via the instance
+    }//end of getBall
+    public static ImageView getBackground_Dunk_Mode() {
+        return instance.Background_Dunk_Mode; // Access via the instance
+    }//end of getBackground_Dunk_Mode
+    public static Label getTitle_Label() {
+        return instance.Title_Label;
+    }//end of getTitle_Label
+
+
+}//end of class
+
+
