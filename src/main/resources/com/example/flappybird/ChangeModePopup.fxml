@@ -65,7 +65,7 @@
       </ImageView>
       <ImageView fx:id="Dunk_icon" fitHeight="150.0" fitWidth="200.0" layoutX="359.0" layoutY="119.0" onMouseClicked="#on_Dunk_icon_clicked" onMouseEntered="#on_Dunk_icon_entered" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../IMGS/Dunk-removebg-preview(1).png" />
+            <Image url="@../../../IMGS/Ball-Icon.png" />
          </image>
       </ImageView>
    </children>

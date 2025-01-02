@@ -46,6 +46,8 @@ public class Controller implements Initializable {
     private Canvas canvas;
     private GraphicsContext gc;
 
+    private double Bird_Speed = 1.0;
+
     @FXML
     private Label Points_Label;
 
@@ -95,6 +97,23 @@ public class Controller implements Initializable {
     }//end of Play_Music
 
 
+    private void Play_Flap_Sound(){
+        MediaPlayer FlapMediaPlayer;
+        String Flap = getClass().getResource("/SOUNDS/Flap.mp3").toExternalForm();
+        Media FlapMedia = new Media(Flap);
+        FlapMediaPlayer = new MediaPlayer(FlapMedia);
+        FlapMediaPlayer.play();
+    }//end of Play_Flap_Sound
+
+    private void Play_Incresepoints_Sound(){
+        MediaPlayer PointsMediaPlayer;
+        String Points = getClass().getResource("/SOUNDS/IncreasePoints.mp3").toExternalForm();
+        Media PointsMedia = new Media(Points);
+        PointsMediaPlayer = new MediaPlayer(PointsMedia);
+        PointsMediaPlayer.play();
+    }//end of Play_Incresepoint_Sound
+
+
 
     private void Start_Flappy_mode(){
         Play_Music();
@@ -119,9 +138,9 @@ public class Controller implements Initializable {
 
 
                 //create new pipes | The top pipes are randomized in length, while the bottom pipes are adjusted to the length of the top-pipes.
-                if (now - lastPipeSpawnTime >= 2*pipeSpawnInterval) {
+                if (now - lastPipeSpawnTime >= 1.7*pipeSpawnInterval) {
                     Pipe.addPipe(new Pipe(800, 0, 50,top,true));   // Top pipe
-                    Pipe.addPipe(new Pipe(800, top+270, 50, 600,false)); // Bottom pipe
+                    Pipe.addPipe(new Pipe(800, top+250, 50, 600,false)); // Bottom pipe
                     counter++;
                     if(counter >= 6) {
                         Pipe.getPipes().removeFirst();
@@ -153,8 +172,15 @@ public class Controller implements Initializable {
                             collision = birdBounds.intersects(pipe.getX()+20, pipe.getY()+20, pipe.getWidth() - 20, pipe.getHeight());
                         }
                         if(birdBounds.getMaxX() >= pipe.getX() && birdBounds.getMaxX()< pipe.getX()+4){
-                            Points+=1;
-                            Points_Label.setText(String.valueOf(Points));
+                            if(!pipe.getWasChecked() && pipe.isTop()){
+
+                                Points+=1;
+                                Play_Incresepoints_Sound();
+                                Points_Label.setText(String.valueOf(Points));
+                                pipe.setWasChecked(true);
+
+
+                            }
                         }
                         if (collision) {
                             gameloop.stop();
@@ -166,9 +192,10 @@ public class Controller implements Initializable {
 
 
 
+                //move the pipes with a speed, according to the reached score
                 for(Pipe p : Pipe.getPipes()){
 
-                    p.setX(p.getX()-1);
+                    p.setX(p.getX()-Bird_Speed);
 
                 }
 
@@ -321,6 +348,7 @@ public class Controller implements Initializable {
             if(Game) {
                 Bird.setY(Bird.getY() - 100);
                 Bird.setRotate(-30);
+                Play_Flap_Sound();
 
            }
        });

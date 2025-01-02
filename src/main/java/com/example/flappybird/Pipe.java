@@ -10,6 +10,7 @@ public class Pipe {
     private double width;
     private double height;
     private boolean top;
+    private boolean wasChecked = false;
 
     //constructor
     public Pipe(double x, double y, double width, double height,boolean top) {
@@ -54,6 +55,14 @@ public class Pipe {
         Pipes.add(x);
     }
 
+    public void setWasChecked(boolean b){
+        this.wasChecked = b;
+    }//end of setWasChecked
+
+    public boolean getWasChecked(){
+        return this.wasChecked;
+    }
 
 
-}//
+
+}//end of class
