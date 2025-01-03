@@ -32,7 +32,7 @@
          </image>
       </ImageView>
       <Canvas fx:id="canvas" height="914.0" layoutX="1.0" layoutY="-2.0" width="667.0" />
-      <Button fx:id="Start_Button" layoutX="233.0" layoutY="478.0" mnemonicParsing="false" onAction="#Start_game" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="Start" textFill="WHITE">
+      <Button fx:id="Start_Button" layoutX="233.0" layoutY="478.0" mnemonicParsing="false" onAction="#Start_game" onMouseEntered="#Play_Mouse_Hover_Sound" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="Start" textFill="WHITE">
          <font>
             <Font name="System Italic" size="24.0" />
          </font>
@@ -44,12 +44,12 @@
             <Font name="System Bold" size="64.0" />
          </font>
       </Label>
-      <Label fx:id="Points_Label" layoutX="258.0" layoutY="49.0" prefHeight="41.0" prefWidth="142.0" text="Points: 0" textAlignment="CENTER" textFill="#ffc300" visible="false">
+      <Label fx:id="Points_Label" layoutX="258.0" layoutY="49.0" prefHeight="53.0" prefWidth="290.0" text="Points: 0" textAlignment="CENTER" textFill="#ffc300" visible="false">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="Change_Mode_Button" layoutX="235.0" layoutY="588.0" mnemonicParsing="false" onAction="#Change_Mode" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="Change Mode" textFill="WHITE">
+      <Button fx:id="Change_Mode_Button" layoutX="235.0" layoutY="588.0" mnemonicParsing="false" onAction="#Change_Mode" onMouseEntered="#Play_Mouse_Hover_Sound" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="Change Mode" textFill="WHITE">
          <font>
             <Font name="System Italic" size="24.0" />
          </font>
@@ -57,7 +57,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="Close_Game_Button" layoutX="233.0" layoutY="690.0" mnemonicParsing="false" onAction="#Exit" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="EXIT" textFill="WHITE">
+      <Button fx:id="Close_Game_Button" layoutX="233.0" layoutY="690.0" mnemonicParsing="false" onAction="#Exit" onMouseEntered="#Play_Mouse_Hover_Sound" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="EXIT" textFill="WHITE">
          <font>
             <Font name="System Italic" size="24.0" />
          </font>

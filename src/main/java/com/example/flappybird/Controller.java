@@ -1,5 +1,8 @@
 package com.example.flappybird;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,8 +17,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
@@ -105,6 +113,7 @@ public class Controller implements Initializable {
         FlapMediaPlayer.play();
     }//end of Play_Flap_Sound
 
+
     private void Play_Incresepoints_Sound(){
         MediaPlayer PointsMediaPlayer;
         String Points = getClass().getResource("/SOUNDS/IncreasePoints.mp3").toExternalForm();
@@ -112,6 +121,23 @@ public class Controller implements Initializable {
         PointsMediaPlayer = new MediaPlayer(PointsMedia);
         PointsMediaPlayer.play();
     }//end of Play_Incresepoint_Sound
+
+    @FXML
+    private void Play_Mouse_Hover_Sound(){
+        MediaPlayer Mouse_HoverMediaPlayer;
+        String Mouse_Hover = getClass().getResource("/SOUNDS/Mouse_Hover.mp3").toExternalForm();
+        Media Mouse_HoverMedia = new Media(Mouse_Hover);
+        Mouse_HoverMediaPlayer = new MediaPlayer(Mouse_HoverMedia);
+        Mouse_HoverMediaPlayer.play();
+    }//end of Play_Mouse_Hover_Sound
+
+    private void Play_Death_Sound(){
+        MediaPlayer DeathMediaPlayer;
+        String Death = getClass().getResource("/SOUNDS/Death.mp3").toExternalForm();
+        Media DeathMedia = new Media(Death);
+        DeathMediaPlayer = new MediaPlayer(DeathMedia);
+        DeathMediaPlayer.play();
+    }//end of Play_Death_Sound
 
 
 
@@ -140,7 +166,7 @@ public class Controller implements Initializable {
                 //create new pipes | The top pipes are randomized in length, while the bottom pipes are adjusted to the length of the top-pipes.
                 if (now - lastPipeSpawnTime >= 1.7*pipeSpawnInterval) {
                     Pipe.addPipe(new Pipe(800, 0, 50,top,true));   // Top pipe
-                    Pipe.addPipe(new Pipe(800, top+250, 50, 600,false)); // Bottom pipe
+                    Pipe.addPipe(new Pipe(800, top+230, 50, 600,false)); // Bottom pipe
                     counter++;
                     if(counter >= 6) {
                         Pipe.getPipes().removeFirst();
@@ -176,7 +202,7 @@ public class Controller implements Initializable {
 
                                 Points+=1;
                                 Play_Incresepoints_Sound();
-                                Points_Label.setText(String.valueOf(Points));
+                                Points_Label.setText("Points: " + String.valueOf(Points));
                                 pipe.setWasChecked(true);
 
 
@@ -213,23 +239,41 @@ public class Controller implements Initializable {
         gameloop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                //bird behavior
-                if (Bird.getRotate() <= 90) {
-                    Bird.setRotate(Bird.getRotate() + 3)
-                    ;Bird.setY(Bird.getY() + 4);
-                }
-                if (Bird.getY() >= 600) {
+                //ball behavior
+
+                Ball.setY(Ball.getY() + 5);
+
+                if (Ball.getY() >= 600) {
                     Lost();
                 }
-                if (Bird.getY() <= -250) {
-                    Bird.setY(-250);
+                if (Ball.getY() <= -250) {
+                    Ball.setY(-250);
+                }
+
+
+                if (now - lastPipeSpawnTime >= 2.4*pipeSpawnInterval) {
+
+                    Random rand_ball = new Random();
+                    int rand = rand_ball.nextInt(950)+10;
+
+                    Basket.getBaskets().push(new Basket(800,rand,10,10,10));
+
+                    lastPipeSpawnTime = now; // Reset timer
+
                 }
 
 
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                Bounds birdBounds = Bird.getBoundsInParent(); // Get the current bounds of the ImageView
+                Bounds birdBounds = Ball.getBoundsInParent(); // Get the current bounds of the ImageView
+
+                for(Basket basket: Basket.getBaskets()) {
+
+                    drawRotated3DRedRing(basket.getCord_x(),basket.getCord_y());
 
 
+                    basket.setCord_x(basket.getCord_x()-1);
+
+                }
 
             }
         };
@@ -240,6 +284,32 @@ public class Controller implements Initializable {
 
     }//end of Start_Dunk_mode
 
+
+    private void drawRotated3DRedRing(int x, int y) {
+        double width = 200;   // Width of the outer ring (now horizontal)
+        double height = 50;   // Height of the outer ring (now narrow)
+
+        // Define gradient for 3D effect
+        RadialGradient gradient = new RadialGradient(
+                0, 0, x + width / 2, y + height / 2, width / 2, false, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.DARKRED),
+                new Stop(0.5, Color.RED),
+                new Stop(1, Color.SALMON)
+        );
+
+        // Draw the outer ring with gradient
+        gc.setFill(gradient);
+        gc.fillOval(x, y, width, height);
+
+        // Draw the inner ring (hole) to simulate the 3D ring
+        double holeInset = 10; // Thickness of the ring
+        gc.setFill(Color.WHITE);
+        gc.fillOval(x + holeInset, y + holeInset, width - 2 * holeInset, height - 2 * holeInset);
+    }
+
+
+
+
     @FXML
     private void Main(){
         System.out.println(mode_flag);
@@ -249,6 +319,7 @@ public class Controller implements Initializable {
             Bird.setVisible(false);
             Background_Flappy_Bird.setVisible(false);
 
+            Start_Dunk_mode();
         }else{
             Bird.setVisible(true);
             Ball.setVisible(false);
@@ -277,9 +348,10 @@ public class Controller implements Initializable {
         }
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        //stop the game and show the titlescreen
+        //stop the game and show the titlescreen and play deathsound
         Game = false;
         gameloop.stop();
+        Play_Death_Sound();
         for(javafx.scene.Node i : Start_screen_container){i.setVisible(true);}
 
         //reset the points and the Points_Label
@@ -345,10 +417,32 @@ public class Controller implements Initializable {
 
         //move the Bird on Mouseclick
         canvas.setOnMouseClicked(event -> {
+
+
             if(Game) {
-                Bird.setY(Bird.getY() - 100);
-                Bird.setRotate(-30);
-                Play_Flap_Sound();
+                if(mode_flag) {
+                    // Create Timeline for the Bird's upward movement
+                    Timeline birdTimeline = new Timeline(
+                            new KeyFrame(
+                                    Duration.millis(200), // Duration of the movement
+                                    new KeyValue(Bird.yProperty(), Bird.getY() - 70), // Move up by 100
+                                    new KeyValue(Bird.rotateProperty(), -30) // Rotate to -30 degrees
+                            )
+                    );
+                    birdTimeline.play(); // Start the animation
+                    Play_Flap_Sound(); // Play the flap sound
+                }else {
+                    // Create Timeline for the Bird's upward movement
+                    Timeline ballTimeline = new Timeline(
+                            new KeyFrame(
+                                    Duration.millis(200), // Duration of the movement
+                                    new KeyValue(Ball.yProperty(), Ball.getY() - 70), // Move up by 100
+                                    new KeyValue(Ball.rotateProperty(), -30) // Rotate to -30 degrees
+                            )
+                    );
+                    ballTimeline.play();
+                    Play_Flap_Sound();
+                }
 
            }
        });

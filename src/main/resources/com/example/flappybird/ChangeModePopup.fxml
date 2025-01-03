@@ -53,7 +53,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Button fx:id="Button_close" layoutX="574.0" layoutY="1.0" mnemonicParsing="false" onAction="#close" style="-fx-background-color: transparent;" text="X">
+      <Button fx:id="Button_close" layoutX="574.0" layoutY="1.0" mnemonicParsing="false" onAction="#close" onMouseEntered="#on_X_hover" style="-fx-background-color: transparent;" text="X">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

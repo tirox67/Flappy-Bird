@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 public class Change_Mode_Window_Controller {
@@ -23,15 +25,33 @@ public class Change_Mode_Window_Controller {
     @FXML
     private ImageView Dunk_icon;
 
+    MediaPlayer Mouse_HoverMediaPlayer;
+    String Mouse_Hover = getClass().getResource("/SOUNDS/Mouse_Hover.mp3").toExternalForm();
+    Media Mouse_HoverMedia = new Media(Mouse_Hover);
+
+
+
     @FXML
     private void on_Dunk_icon_entered(){
         animate_icon(Dunk_icon);
+        Mouse_HoverMediaPlayer = new MediaPlayer(Mouse_HoverMedia);
+        Mouse_HoverMediaPlayer.play();
     }//end of on_Dunk_icon_entered
 
     @FXML
     private void on_Flappy_icon_entered(){
         animate_icon(Flappy_icon);
+        Mouse_HoverMediaPlayer = new MediaPlayer(Mouse_HoverMedia);
+        Mouse_HoverMediaPlayer.play();
     }//end of on_Flappy_icon_entered
+
+    @FXML
+    private void on_X_hover(){
+
+        Mouse_HoverMediaPlayer = new MediaPlayer(Mouse_HoverMedia);
+        Mouse_HoverMediaPlayer.play();
+
+    }
 
 
     // Logic to animate the icon (grow and shrink)
