@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    static javafx.scene.Node[] Start_screen_container = new javafx.scene.Node[4];
+    static javafx.scene.Node[] Start_screen_container = new javafx.scene.Node[3];
 
     public static Controller instance;
 
@@ -44,12 +44,10 @@ public class Controller implements Initializable {
     private Label Title_Label;
     @FXML
     public ImageView Bird;
-    @FXML
-    private ImageView Ball;
+
     @FXML
     private ImageView Background_Flappy_Bird;
-    @FXML
-    private ImageView Background_Dunk_Mode;
+
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
@@ -63,17 +61,11 @@ public class Controller implements Initializable {
 
     private boolean Game = false;
 
-    @FXML
-    private Button Change_Mode_Button;
 
-    // false = Flappydunk, true = Flappybird
-    private static boolean mode_flag = true;
 
-    public static boolean getMode_flag()
-    {return mode_flag;}
 
-    public static void setMode_flag(boolean flag)
-    {mode_flag = flag;}
+
+
 
 
     //start game
@@ -235,99 +227,17 @@ public class Controller implements Initializable {
 
     }//end of Start_Flappy_mode
 
-    private void Start_Dunk_mode(){
-        gameloop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                //ball behavior
-
-                Ball.setY(Ball.getY() + 5);
-
-                if (Ball.getY() >= 600) {
-                    Lost();
-                }
-                if (Ball.getY() <= -250) {
-                    Ball.setY(-250);
-                }
-
-
-                if (now - lastPipeSpawnTime >= 2.4*pipeSpawnInterval) {
-
-                    Random rand_ball = new Random();
-                    int rand = rand_ball.nextInt(950)+10;
-
-                    Basket.getBaskets().push(new Basket(800,rand,10,10,10));
-
-                    lastPipeSpawnTime = now; // Reset timer
-
-                }
-
-
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                Bounds birdBounds = Ball.getBoundsInParent(); // Get the current bounds of the ImageView
-
-                for(Basket basket: Basket.getBaskets()) {
-
-                    drawRotated3DRedRing(basket.getCord_x(),basket.getCord_y());
-
-
-                    basket.setCord_x(basket.getCord_x()-1);
-
-                }
-
-            }
-        };
-
-
-        // Start the game loop
-        gameloop.start();
-
-    }//end of Start_Dunk_mode
-
-
-    private void drawRotated3DRedRing(int x, int y) {
-        double width = 200;   // Width of the outer ring (now horizontal)
-        double height = 50;   // Height of the outer ring (now narrow)
-
-        // Define gradient for 3D effect
-        RadialGradient gradient = new RadialGradient(
-                0, 0, x + width / 2, y + height / 2, width / 2, false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.DARKRED),
-                new Stop(0.5, Color.RED),
-                new Stop(1, Color.SALMON)
-        );
-
-        // Draw the outer ring with gradient
-        gc.setFill(gradient);
-        gc.fillOval(x, y, width, height);
-
-        // Draw the inner ring (hole) to simulate the 3D ring
-        double holeInset = 10; // Thickness of the ring
-        gc.setFill(Color.WHITE);
-        gc.fillOval(x + holeInset, y + holeInset, width - 2 * holeInset, height - 2 * holeInset);
-    }
-
-
 
 
     @FXML
     private void Main(){
-        System.out.println(mode_flag);
-        if(!mode_flag) {
-            Ball.setVisible(true);
-            Background_Dunk_Mode.setVisible(true);
-            Bird.setVisible(false);
-            Background_Flappy_Bird.setVisible(false);
 
-            Start_Dunk_mode();
-        }else{
-            Bird.setVisible(true);
-            Ball.setVisible(false);
-            Background_Flappy_Bird.setVisible(true);
-            Background_Dunk_Mode.setVisible(false);
 
-            Start_Flappy_mode();
-        }
+        Bird.setVisible(true);
+        Background_Flappy_Bird.setVisible(true);
+
+        Start_Flappy_mode();
+
     }//end of Main
 
     //reset game and go back to start screen
@@ -335,17 +245,13 @@ public class Controller implements Initializable {
     private void Lost(){
 
         //delete the obstacles and reset the player
-        if(mode_flag) {
-            Bird.setRotate(0);
-            Bird.setY(0);
-            Bird.setX(0);
-            Pipe.clearPipes();
-            FlappyMediaPlayer.stop();
-        }else {
-            Ball.setRotate(0);
-            Ball.setY(0);
-            Ball.setX(0);
-        }
+
+        Bird.setRotate(0);
+        Bird.setY(0);
+        Bird.setX(0);
+        Pipe.clearPipes();
+        FlappyMediaPlayer.stop();
+
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         //stop the game and show the titlescreen and play deathsound
@@ -367,31 +273,6 @@ public class Controller implements Initializable {
     {return stage_Change_Mode;}
 
 
-    //logic to open the popup for the mode selection. The Window got his own Controller/FXML
-    @FXML
-    private void Change_Mode() {
-
-        try {
-            // Load the FXML for the new window (Whiteboard.fxml)
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChangeModePopup.fxml"));
-            Parent root1 = fxmlLoader.load();
-
-            // Create a new Stage (window)
-            stage_Change_Mode = new Stage();
-
-            // Set the scene and show the new window
-            stage_Change_Mode.setScene(new Scene(root1));
-            stage_Change_Mode.initStyle(StageStyle.TRANSPARENT);
-            stage_Change_Mode.show();
-
-
-
-        } catch (IOException e) {
-            // If an error occurs while loading the FXML, print the error message
-            e.printStackTrace();
-            System.out.println("Error loading FXML for the new window.");
-        }//end of try-catch
-    }//end of Change-Mode
 
     //logic to leave the game
     @FXML
@@ -411,8 +292,7 @@ public class Controller implements Initializable {
         //add the objects in the Start_screen_container to change the visibility easier
         Start_screen_container[0] = Start_Button;
         Start_screen_container[1] = Title_Label;
-        Start_screen_container[2] = Change_Mode_Button;
-        Start_screen_container[3] = Close_Game_Button;
+        Start_screen_container[2] = Close_Game_Button;
 
 
         //move the Bird on Mouseclick
@@ -420,29 +300,18 @@ public class Controller implements Initializable {
 
 
             if(Game) {
-                if(mode_flag) {
-                    // Create Timeline for the Bird's upward movement
-                    Timeline birdTimeline = new Timeline(
-                            new KeyFrame(
-                                    Duration.millis(200), // Duration of the movement
-                                    new KeyValue(Bird.yProperty(), Bird.getY() - 70), // Move up by 100
-                                    new KeyValue(Bird.rotateProperty(), -30) // Rotate to -30 degrees
-                            )
-                    );
-                    birdTimeline.play(); // Start the animation
-                    Play_Flap_Sound(); // Play the flap sound
-                }else {
-                    // Create Timeline for the Bird's upward movement
-                    Timeline ballTimeline = new Timeline(
-                            new KeyFrame(
-                                    Duration.millis(200), // Duration of the movement
-                                    new KeyValue(Ball.yProperty(), Ball.getY() - 70), // Move up by 100
-                                    new KeyValue(Ball.rotateProperty(), -30) // Rotate to -30 degrees
-                            )
-                    );
-                    ballTimeline.play();
-                    Play_Flap_Sound();
-                }
+
+                // Create Timeline for the Bird's upward movement
+                Timeline birdTimeline = new Timeline(
+                        new KeyFrame(
+                                Duration.millis(200), // Duration of the movement
+                                new KeyValue(Bird.yProperty(), Bird.getY() - 70), // Move up by 100
+                                new KeyValue(Bird.rotateProperty(), -30) // Rotate to -30 degrees
+                        )
+                );
+                birdTimeline.play(); // Start the animation
+                Play_Flap_Sound(); // Play the flap sound
+
 
            }
        });
@@ -454,12 +323,6 @@ public class Controller implements Initializable {
     public static ImageView getBackground_Flappy_Mode() {
         return instance.Background_Flappy_Bird; // Access via the instance
     }//end of getBackground_Flappy_Mode
-    public static ImageView getBall() {
-        return instance.Ball; // Access via the instance
-    }//end of getBall
-    public static ImageView getBackground_Dunk_Mode() {
-        return instance.Background_Dunk_Mode; // Access via the instance
-    }//end of getBackground_Dunk_Mode
     public static Label getTitle_Label() {
         return instance.Title_Label;
     }//end of getTitle_Label

@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.flappybird.Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.flappybird.Controller">
    <children>
-      <ImageView fx:id="Background_Dunk_Mode" fitHeight="1027.0" fitWidth="696.0" layoutX="-8.0" layoutY="-15.0" pickOnBounds="true" preserveRatio="true" visible="false">
-         <image>
-            <Image url="@../../../IMGS/Background_Dunk.png" />
-         </image>
-      </ImageView>
+
       <ImageView fx:id="Background_Flappy_Bird" fitHeight="1000.0" fitWidth="973.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../IMGS/Background_Flappy_Mode.jpg" />
@@ -26,11 +20,7 @@
             <Image url="@../../../IMGS/Bird.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="Ball" fitHeight="72.0" fitWidth="86.0" layoutX="292.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true" visible="false">
-         <image>
-            <Image url="@../../../IMGS/Ball.png" />
-         </image>
-      </ImageView>
+
       <Canvas fx:id="canvas" height="914.0" layoutX="1.0" layoutY="-2.0" width="667.0" />
       <Button fx:id="Start_Button" layoutX="233.0" layoutY="478.0" mnemonicParsing="false" onAction="#Start_game" onMouseEntered="#Play_Mouse_Hover_Sound" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="Start" textFill="WHITE">
          <font>
@@ -49,15 +39,8 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="Change_Mode_Button" layoutX="235.0" layoutY="588.0" mnemonicParsing="false" onAction="#Change_Mode" onMouseEntered="#Play_Mouse_Hover_Sound" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="Change Mode" textFill="WHITE">
-         <font>
-            <Font name="System Italic" size="24.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Button fx:id="Close_Game_Button" layoutX="233.0" layoutY="690.0" mnemonicParsing="false" onAction="#Exit" onMouseEntered="#Play_Mouse_Hover_Sound" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="EXIT" textFill="WHITE">
+
+      <Button fx:id="Close_Game_Button" layoutX="233.0" layoutY="592.0" mnemonicParsing="false" onAction="#Exit" onMouseEntered="#Play_Mouse_Hover_Sound" prefHeight="44.0" prefWidth="200.0" style="-fx-background-color: orange; -fx-border-color: black; -fx-border-width: 3;" text="EXIT" textFill="WHITE">
          <font>
             <Font name="System Italic" size="24.0" />
          </font>
